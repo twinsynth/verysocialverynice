@@ -1,1 +1,33 @@
+[
+  {
+    "id": "mindbenders",
+    "name": "Mind Benders",
+    "color": "#4d3c97",
+    "file": "mindbenders.html"
+  },
+  {
+    "id": "poptalk",
+    "name": "Pop Talk",
+    "color": "#ed4c67",
+    "file": "poptalk.html"
+  },
+  {
+    "id": "wanderlust",
+    "name": "Wanderlust",
+    "color": "#118a7e",
+    "file": "wanderlust.html"
+  },
+  {
+    "id": "hottakes",
+    "name": "Hot Takes",
+    "color": "#c0392b",
+    "file": "hottakes.html"
+  },
+  {
+    "id": "forthelols",
+    "name": "For the LOLs",
+    "color": "#f78fb3",
+    "file": "forthelols.html"
+  }
+]
 
