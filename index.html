@@ -25,7 +25,9 @@
       <div class="header">
         <h1>Select Topics</h1>
       </div>
-      <form id="topics-form"></form>
+      <div class="topic-box">
+        <form id="topics-form"></form>
+      </div>
     </div>
     <div class="control-bar">
       <button id="next-button">Next</button>
@@ -64,8 +66,6 @@
     document.getElementById("play-button").addEventListener("click", () => {
       showView("topics-screen");
     });
-
-  
 
     document.getElementById("next-button").addEventListener("click", () => {
       const selected = Array.from(document.querySelectorAll("input[name='topic']:checked"))
