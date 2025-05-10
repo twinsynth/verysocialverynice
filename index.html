@@ -25,13 +25,7 @@
       <h1>Select Topics</h1>
       <button id="close-topics">✕</button>
     </div>
-    <form id="topics-form">
-      <label><input type="checkbox" name="topic" value="mindbenders" checked /> Mind Benders</label><br />
-      <label><input type="checkbox" name="topic" value="poptalk" checked /> Pop Talk</label><br />
-      <label><input type="checkbox" name="topic" value="wanderlust" checked /> Wanderlust</label><br />
-      <label><input type="checkbox" name="topic" value="hottakes" checked /> Hot Takes</label><br />
-      <label><input type="checkbox" name="topic" value="forthelols" checked /> For the LOLs</label><br />
-    </form>
+    <form id="topics-form"></form>
     <div class="next-button-wrapper">
       <button id="next-button">Next</button>
     </div>
@@ -50,6 +44,18 @@
   </section>
 
   <script>
+    async function loadTopics() {
+      const res = await fetch("data/topics.json");
+      const topics = await res.json();
+      const form = document.getElementById("topics-form");
+      topics.forEach(topic => {
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="checkbox" name="topic" value="${topic.id}" checked /> ${topic.name}`;
+        form.appendChild(label);
+        form.appendChild(document.createElement("br"));
+      });
+    }
+
     function showView(viewId) {
       document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
       document.getElementById(viewId).style.display = "block";
@@ -70,6 +76,8 @@
       showView("game-screen");
       if (typeof buildDeck === 'function') buildDeck();
     });
+
+    loadTopics();
   </script>
   <script type="module" src="assets/js/main.js"></script>
 </body>
