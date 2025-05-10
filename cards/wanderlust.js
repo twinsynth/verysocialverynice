@@ -1,9 +1,7 @@
-<!-- Wanderlust - Card Set -->
-<script>
-  const topic = "wanderlust";
-  const color = "#118a7e";
-
-  const wanderlust = [
+export default {
+  topic: "wanderlust",
+  color: "#118a7e",
+  cards: [
     "Traveling alone is more rewarding than with others — agree or disagree?",
     "You can truly understand a culture only by living there — agree or disagree?",
     "The journey is always better than the destination — agree or disagree?",
@@ -14,5 +12,5 @@
     "Nature-based travel beats urban exploration — agree or disagree?",
     "Photos ruin the moment more than they preserve it — agree or disagree?",
     "You learn more from travel than from formal education — agree or disagree?"
-  ];
-</script>
+  ]
+};
