@@ -124,3 +124,4 @@ if (document.getElementById("shuffle-button")) {
 if (document.getElementById("card-stack")) {
   buildDeck();
 }
+window.buildDeck = buildDeck;
