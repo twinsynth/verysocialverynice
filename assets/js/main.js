@@ -90,9 +90,11 @@ function renderDeck() {
 function nextCard() {
   currentCardIndex++;
   if (currentCardIndex >= deck.length) {
-    alert("You've gone through all the cards!");
+    shuffle(deck); // endless + reshuffle
     currentCardIndex = 0;
   }
+  renderDeck();
+}
   renderDeck();
 }
 
