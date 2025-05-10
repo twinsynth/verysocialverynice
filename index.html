@@ -3,30 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Card Game</title>
+  <title>Card Swipe Game</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       height: 100%;
       background: #111;
       font-family: sans-serif;
       overflow: hidden;
     }
-
     #deck {
       position: absolute;
       width: 100%;
       height: 100%;
-      touch-action: pan-y;
       display: flex;
       align-items: center;
       justify-content: center;
+      touch-action: pan-y;
     }
-
     .card {
       width: 80vw;
       aspect-ratio: 3 / 5;
@@ -35,34 +29,14 @@
       position: absolute;
       transition: transform 0.3s ease, opacity 0.3s ease;
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px;
-      color: white;
-      font-size: 1.2rem;
-      user-select: none;
-    }
-
-    .card .question {
-      flex: 1;
-      display: none;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      color: white;
+      font-size: 1.3rem;
       font-weight: bold;
       text-align: center;
-    }
-
-    .card .meta {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-    }
-
-    .revealed .question {
-      display: flex;
-    }
-    .revealed .meta {
-      display: none;
+      user-select: none;
     }
   </style>
 </head>
@@ -70,23 +44,20 @@
   <div id="deck"></div>
 
   <script type="module">
-    const topics = [
-      'forthelols', 'hottakes', 'mindbenders', 'poptalk', 'wanderlust'
-    ];
+    const topics = ['forthelols', 'hottakes', 'mindbenders', 'poptalk', 'wanderlust'];
+    const deckEl = document.getElementById('deck');
 
     const loadCards = async () => {
       let allCards = [];
       for (const topic of topics) {
         const mod = await import(`./cards/${topic}.js`);
         const data = mod.default;
-        const entries = data.cards.map(text => ({
+        allCards.push(...data.cards.map(text => ({
           text,
           topic: data.topic,
           color: data.color
-        }));
-        allCards = allCards.concat(entries);
+        })));
       }
-
       // Shuffle
       for (let i = allCards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -95,36 +66,19 @@
       return allCards;
     };
 
-    const deckEl = document.getElementById('deck');
-
     const createCardEl = (cardData, zIndex) => {
       const el = document.createElement('div');
       el.className = 'card';
       el.style.backgroundColor = cardData.color;
       el.style.zIndex = zIndex;
+      el.textContent = cardData.text;
 
-      el.innerHTML = `
-        <div class="question">${cardData.text}</div>
-        <div class="meta">
-          <div>${cardData.topic.replace(/^\w/, c => c.toUpperCase())}</div>
-          <div>📌</div>
-        </div>
-      `;
-
-      let revealed = false;
-      let startX = 0;
-      let currentX = 0;
-
-      const onTap = () => {
-        if (!revealed) {
-          el.classList.add('revealed');
-          revealed = true;
-        }
-      };
+      let startX = 0, startY = 0, currentX = 0, currentY = 0;
 
       const onDragStart = (e) => {
-        if (!revealed) return;
-        startX = e.touches ? e.touches[0].clientX : e.clientX;
+        const point = e.touches ? e.touches[0] : e;
+        startX = point.clientX;
+        startY = point.clientY;
         el.style.transition = 'none';
         window.addEventListener('touchmove', onDragMove);
         window.addEventListener('touchend', onDragEnd);
@@ -133,31 +87,30 @@
       };
 
       const onDragMove = (e) => {
-        const x = e.touches ? e.touches[0].clientX : e.clientX;
-        currentX = x - startX;
-        el.style.transform = `translateX(${currentX}px) rotate(${currentX * 0.05}deg)`;
+        const point = e.touches ? e.touches[0] : e;
+        currentX = point.clientX - startX;
+        currentY = point.clientY - startY;
+        el.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${currentX * 0.1}deg)`;
       };
 
       const onDragEnd = () => {
-        if (Math.abs(currentX) > 80) {
+        const threshold = 80;
+        if (Math.abs(currentX) > threshold || Math.abs(currentY) > threshold) {
           el.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-          el.style.transform = `translateX(${currentX * 4}px) rotate(${currentX * 0.2}deg)`;
+          el.style.transform = `translate(${currentX * 4}px, ${currentY * 4}px) rotate(${currentX * 0.2}deg)`;
           el.style.opacity = 0;
-          setTimeout(() => {
-            el.remove();
-          }, 300);
+          setTimeout(() => el.remove(), 300);
         } else {
           el.style.transition = 'transform 0.3s ease';
           el.style.transform = '';
         }
-        currentX = 0;
+        currentX = currentY = 0;
         window.removeEventListener('touchmove', onDragMove);
         window.removeEventListener('touchend', onDragEnd);
         window.removeEventListener('mousemove', onDragMove);
         window.removeEventListener('mouseup', onDragEnd);
       };
 
-      el.addEventListener('click', onTap);
       el.addEventListener('touchstart', onDragStart);
       el.addEventListener('mousedown', onDragStart);
 
