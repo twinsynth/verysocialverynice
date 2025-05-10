@@ -108,7 +108,11 @@
       el.style.backgroundColor = cardData.color;
       el.style.zIndex = zIndex;
 
-      const capitalized = cardData.topic.replace(/^\w/, c => c.toUpperCase());
+      const capitalized = cardData.topic
+  .replace(/([a-z])([A-Z])/g, '$1 $2')   // camelCase → camel Case
+  .replace(/[_-]/g, ' ')                 // snake-case or kebab-case
+  .replace(/([a-z]+)/gi, w => w.toUpperCase()); // ALL CAPS
+
       const iconFile = iconMap[cardData.topic];
 
       el.innerHTML = `
