@@ -1,9 +1,7 @@
-<!-- Hot Takes - Card Set -->
-<script>
-  const topic = "hottakes";
-  const color = "#c0392b";
-
-  const hottakes = [
+export default {
+  topic: "hottakes",
+  color: "#c0392b",
+  cards: [
     "Cancel culture is an effective way to hold people accountable.",
     "Billionaires have a moral responsibility to redistribute their wealth.",
     "Mandatory voting would improve democracy.",
@@ -14,5 +12,5 @@
     "Eating meat in the modern world is unethical.",
     "Universities are overrated and overpriced.",
     "People care more about being right than being kind."
-  ];
-</script>
+  ]
+};
