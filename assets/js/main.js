@@ -13,24 +13,29 @@ function shuffle(array) {
 
 async function buildDeck() {
   deck = [];
+  console.log("🧠 Selected topics:", selectedTopics);
 
   for (const topic of selectedTopics) {
     try {
-      const module = await import(`../cards/${topic}.js`);
+      console.log(`📦 Attempting to load: ${topic}`);
+      const module = await import(`../../cards/${topic}.js`);
       const topicData = module.default;
 
-      const cards = topicData.cards.map(text => ({
+      const cards = topicData.cards.map((text, i) => ({
+        id: `${topic}-${i}`,
         text,
         topic: topicData.topic,
         color: topicData.color
       }));
 
+      console.log(`✅ Loaded ${cards.length} cards from ${topic}`);
       deck.push(...cards);
     } catch (err) {
-      console.error(`Failed to load topic: ${topic}`, err);
+      console.error(`❌ Failed to load topic: ${topic}`, err);
     }
   }
 
+  console.log("🗂 Final deck:", deck);
   shuffle(deck);
   renderDeck();
 }
@@ -38,6 +43,11 @@ async function buildDeck() {
 function renderDeck() {
   const stack = document.getElementById("card-stack");
   stack.innerHTML = "";
+
+  if (!deck.length) {
+    stack.innerHTML = '<p style="color:red; text-align:center;">⚠️ No cards loaded.</p>';
+    return;
+  }
 
   const visibleCards = deck.slice(currentCardIndex, currentCardIndex + 10);
 
@@ -124,4 +134,5 @@ if (document.getElementById("shuffle-button")) {
 if (document.getElementById("card-stack")) {
   buildDeck();
 }
+
 window.buildDeck = buildDeck;
