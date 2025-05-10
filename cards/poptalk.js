@@ -1,9 +1,7 @@
-<!-- Pop Talk - Card Set -->
-<script>
-  const topic = "poptalk";
-  const color = "#ed4c67";
-
-  const poptalk = [
+export default {
+  topic: "poptalk",
+  color: "#ed4c67",
+  cards: [
     "What’s your guilty pleasure reality show?",
     "You can tell a lot about someone by their taste in music — agree or disagree?",
     "Subtitles make every show better — agree or disagree?",
@@ -14,6 +12,5 @@
     "It’s okay to judge someone by their Spotify playlist — agree or disagree?",
     "Binge-watching kills the magic of a good series — agree or disagree?",
     "TikTok is the future of pop culture — agree or disagree?"
-  ];
-</script>
-
+  ]
+};
