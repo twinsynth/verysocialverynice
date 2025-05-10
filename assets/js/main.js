@@ -18,7 +18,8 @@ async function buildDeck() {
   for (const topic of selectedTopics) {
     try {
       console.log(`📦 Attempting to load: ${topic}`);
-      const module = await import(`cards/${topic}.js`);
+      const module = await import(`/verysocialverynice/cards/${topic}.js`);
+
 
       const topicData = module.default;
 
