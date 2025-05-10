@@ -1,12 +1,4 @@
-// Placeholder card data for demo (can be replaced by loading from external file)
-const allCards = [
-  { text: "Is happiness a choice?", topic: "mindbenders", color: "#4d3c97" },
-  { text: "What’s your guilty pleasure show?", topic: "poptalk", color: "#ed4c67" },
-  { text: "Traveling alone is more rewarding than with others.", topic: "wanderlust", color: "#118a7e" },
-  { text: "Pineapple belongs on pizza.", topic: "forthelols", color: "#f78fb3" },
-  { text: "People should be allowed to say anything online.", topic: "hottakes", color: "#c0392b" }
-];
-
+// Dynamically load cards from topic JS modules
 let selectedTopics = JSON.parse(localStorage.getItem("selectedTopics")) || [];
 let deck = [];
 let currentCardIndex = 0;
@@ -19,8 +11,26 @@ function shuffle(array) {
   return array;
 }
 
-function buildDeck() {
-  deck = allCards.filter(card => selectedTopics.includes(card.topic));
+async function buildDeck() {
+  deck = [];
+
+  for (const topic of selectedTopics) {
+    try {
+      const module = await import(`../cards/${topic}.js`);
+      const topicData = module.default;
+
+      const cards = topicData.cards.map(text => ({
+        text,
+        topic: topicData.topic,
+        color: topicData.color
+      }));
+
+      deck.push(...cards);
+    } catch (err) {
+      console.error(`Failed to load topic: ${topic}`, err);
+    }
+  }
+
   shuffle(deck);
   renderDeck();
 }
@@ -37,13 +47,26 @@ function renderDeck() {
     cardEl.style.zIndex = 100 - index;
     cardEl.style.top = `${index * 2}px`;
     cardEl.style.left = `${index * 2}px`;
-    cardEl.style.backgroundColor = card.color;
-    cardEl.innerHTML = `<div class="card-content">Tap to flip</div><div class="topic-label">${card.topic}</div>`;
+
+    const inner = document.createElement("div");
+    inner.className = "card-inner";
+
+    const front = document.createElement("div");
+    front.className = "card-front";
+    front.style.backgroundColor = card.color;
+    front.textContent = "Tap to flip";
+
+    const back = document.createElement("div");
+    back.className = "card-back";
+    back.innerHTML = `<div class="card-content">${card.text}</div><div class="topic-label">${card.topic}</div>`;
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    cardEl.appendChild(inner);
 
     cardEl.addEventListener("click", () => {
       if (!cardEl.classList.contains("flipped")) {
         cardEl.classList.add("flipped");
-        cardEl.innerHTML = `<div class="card-content">${card.text}</div><div class="topic-label">${card.topic}</div>`;
       } else {
         nextCard();
       }
