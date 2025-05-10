@@ -1,9 +1,7 @@
-<!-- Mind Benders - Card Set -->
-<script>
-  const topic = "mindbenders";
-  const color = "#4d3c97";
-
-  const mindbenders = [
+export default {
+  topic: "mindbenders",
+  color: "#4d3c97",
+  cards: [
     "True freedom means having no obligations to anyone — agree or disagree?",
     "You are the same person no matter who you’re with — agree or disagree?",
     "Happiness is more a decision than a feeling — agree or disagree?",
@@ -16,6 +14,5 @@
     "We are more defined by what we run from than what we chase — agree or disagree?",
     "Morality changes depending on the situation — agree or disagree?",
     "You owe loyalty to yourself before anyone else — agree or disagree?"
-  ];
-</script>
-
+  ]
+};
