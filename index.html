@@ -6,22 +6,71 @@
   <title>Very Social Very Nice</title>
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
-<body class="landing">
-  <div class="container">
-    <div class="logo">
-      <img src="assets/img/logo.svg" alt="Very Social Very Nice Logo" />
+<body>
+  <!-- Landing View -->
+  <section id="landing-screen">
+    <div class="container">
+      <div class="logo">
+        <img src="assets/img/logo.svg" alt="Very Social Very Nice Logo" />
+      </div>
+      <div class="play-button-wrapper">
+        <button id="play-button">PLAY</button>
+      </div>
     </div>
+  </section>
 
-    <div class="play-button-wrapper">
-      <button id="play-button">PLAY</button>
+  <!-- Topics View -->
+  <section id="topics-screen" style="display:none;">
+    <div class="header">
+      <h1>Select Topics</h1>
+      <button id="close-topics">✕</button>
     </div>
-  </div>
+    <form id="topics-form">
+      <label><input type="checkbox" name="topic" value="mindbenders" checked /> Mind Benders</label><br />
+      <label><input type="checkbox" name="topic" value="poptalk" checked /> Pop Talk</label><br />
+      <label><input type="checkbox" name="topic" value="wanderlust" checked /> Wanderlust</label><br />
+      <label><input type="checkbox" name="topic" value="hottakes" checked /> Hot Takes</label><br />
+      <label><input type="checkbox" name="topic" value="forthelols" checked /> For the LOLs</label><br />
+    </form>
+    <div class="next-button-wrapper">
+      <button id="next-button">Next</button>
+    </div>
+  </section>
+
+  <!-- Game View -->
+  <section id="game-screen" style="display:none;">
+    <div class="game-container">
+      <div id="deck-area">
+        <div id="card-stack"></div>
+      </div>
+      <div class="controls">
+        <button id="shuffle-button">🔀 Shuffle</button>
+      </div>
+    </div>
+  </section>
 
   <script>
-    document.getElementById("play-button").addEventListener("click", function () {
-      window.location.href = "topics.html";
+    function showView(viewId) {
+      document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
+      document.getElementById(viewId).style.display = "block";
+    }
+
+    document.getElementById("play-button").addEventListener("click", () => {
+      showView("topics-screen");
+    });
+
+    document.getElementById("close-topics").addEventListener("click", () => {
+      showView("landing-screen");
+    });
+
+    document.getElementById("next-button").addEventListener("click", () => {
+      const selected = Array.from(document.querySelectorAll("input[name='topic']:checked"))
+        .map(input => input.value);
+      localStorage.setItem("selectedTopics", JSON.stringify(selected));
+      showView("game-screen");
+      if (typeof buildDeck === 'function') buildDeck();
     });
   </script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
-
