@@ -7,42 +7,23 @@
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
-  <!-- Landing View -->
-  <section id="landing-screen">
-    <div class="container">
-      <div class="logo">
-        <img src="assets/img/logo.svg" alt="Very Social Very Nice Logo" />
-      </div>
-    </div>
-    <div class="control-bar">
-      <button id="play-button">PLAY</button>
-    </div>
-  </section>
-
-  <!-- Topics View -->
-  <section id="topics-screen" class="hidden">
-    <div class="container">
-      <div class="header">
-        <h1>Select Topics</h1>
-      </div>
-      <div class="topic-box">
-        <form id="topics-form"></form>
-      </div>
-    </div>
-    <div class="control-bar">
-      <button id="next-button">Next</button>
-    </div>
-  </section>
-
-  <!-- Game View -->
-  <section id="game-screen" class="hidden">
+  <!-- Game Slide View Only -->
+  <section id="game-screen">
     <div class="game-container">
       <div id="deck-area">
         <div id="card-stack"></div>
       </div>
     </div>
+
+    <!-- Minimal UI: Hamburger + Shuffle -->
     <div class="control-bar">
-      <button id="shuffle-button">🔀 Shuffle</button>
+      <button id="menu-button">☰</button>
+      <button id="shuffle-button">🔀</button>
+    </div>
+
+    <!-- Slide-out Filter Menu -->
+    <div id="menu-panel" class="hidden">
+      <form id="topics-form"></form>
     </div>
   </section>
 
@@ -51,6 +32,7 @@
       const res = await fetch("data/topics.json");
       const topics = await res.json();
       const form = document.getElementById("topics-form");
+      form.innerHTML = "";
       topics.forEach(topic => {
         const label = document.createElement("label");
         label.innerHTML = `<input type="checkbox" name="topic" value="${topic.id}" checked /> ${topic.name}`;
@@ -58,21 +40,16 @@
       });
     }
 
-    function showView(viewId) {
-      document.querySelectorAll("section").forEach(sec => sec.classList.add("hidden"));
-      document.getElementById(viewId).classList.remove("hidden");
-    }
-
-    document.getElementById("play-button").addEventListener("click", () => {
-      showView("topics-screen");
+    document.getElementById("menu-button").addEventListener("click", () => {
+      document.getElementById("menu-panel").classList.toggle("hidden");
     });
 
-    document.getElementById("next-button").addEventListener("click", () => {
+    document.getElementById("shuffle-button").addEventListener("click", () => {
       const selected = Array.from(document.querySelectorAll("input[name='topic']:checked"))
         .map(input => input.value);
       localStorage.setItem("selectedTopics", JSON.stringify(selected));
-      showView("game-screen");
-      if (typeof buildDeck === 'function') buildDeck();
+      currentCardIndex = 0;
+      buildDeck();
     });
 
     loadTopics();
