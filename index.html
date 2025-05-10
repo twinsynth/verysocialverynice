@@ -3,69 +3,176 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Very Social Very Nice</title>
-  <link rel="stylesheet" href="assets/css/styles.css" />
-</head>
-<body>
-  <!-- Game Slide View Only -->
-  <section id="game-screen">
-    <div class="game-container">
-      <div id="deck-area">
-        <div id="card-stack"></div>
-      </div>
-    </div>
-
-    <!-- Minimal UI: Hamburger + Shuffle -->
-    <div class="control-bar" style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 1rem;">
-  <button id="menu-button" style="width: 48px; height: 48px; font-size: 1.2rem; border-radius: 12px; background: #4d3c97; color: white; border: none;">☰</button>
-  <button id="shuffle-button" style="width: 48px; height: 48px; font-size: 1.2rem; border-radius: 12px; background: #4d3c97; color: white; border: none;">🔀</button>
-</div>
-
-    <!-- Slide-out Filter Menu -->
-    <div id="menu-panel" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 5;">
-      <div id="topics-form" style="display: flex; flex-direction: column; gap: 1rem;"></div>
-    </div>
-  </section>
-
-  <script>
-    async function loadTopics() {
-  const res = await fetch("data/topics.json");
-  const topics = await res.json();
-  const form = document.getElementById("topics-form");
-  form.innerHTML = "";
-  window.selectedTopics = new Set(topics.map(t => t.id));
-
-  topics.forEach(topic => {
-    const box = document.createElement("div");
-    box.className = "topic-option selected";
-    box.textContent = topic.name;
-    box.dataset.topic = topic.id;
-    box.onclick = () => {
-      box.classList.toggle("selected");
-      if (box.classList.contains("selected")) {
-        window.selectedTopics.add(topic.id);
-      } else {
-        window.selectedTopics.delete(topic.id);
-      }
-    };
-    form.appendChild(box);
-  });
-});
+  <title>Card Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      background: #111;
+      font-family: sans-serif;
+      overflow: hidden;
     }
 
-    document.getElementById("menu-button").addEventListener("click", () => {
-      document.getElementById("menu-panel").classList.toggle("hidden");
-    });
+    #deck {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      touch-action: pan-y;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    document.getElementById("shuffle-button").addEventListener("click", () => {
-  const selected = Array.from(window.selectedTopics);
-  localStorage.setItem("selectedTopics", JSON.stringify(selected));
-  currentCardIndex = 0;
-  buildDeck();
-});
+    .card {
+      width: 80vw;
+      aspect-ratio: 3 / 5;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      position: absolute;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      color: white;
+      font-size: 1.2rem;
+      user-select: none;
+    }
 
-    loadTopics();
+    .card .question {
+      flex: 1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .card .meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+
+    .revealed .question {
+      display: flex;
+    }
+    .revealed .meta {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="deck"></div>
+
+  <script type="module">
+    const topics = [
+      'forthelols', 'hottakes', 'mindbenders', 'poptalk', 'wanderlust'
+    ];
+
+    const loadCards = async () => {
+      let allCards = [];
+      for (const topic of topics) {
+        const mod = await import(`./cards/${topic}.js`);
+        const data = mod.default;
+        const entries = data.cards.map(text => ({
+          text,
+          topic: data.topic,
+          color: data.color
+        }));
+        allCards = allCards.concat(entries);
+      }
+
+      // Shuffle
+      for (let i = allCards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allCards[i], allCards[j]] = [allCards[j], allCards[i]];
+      }
+      return allCards;
+    };
+
+    const deckEl = document.getElementById('deck');
+
+    const createCardEl = (cardData, zIndex) => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.style.backgroundColor = cardData.color;
+      el.style.zIndex = zIndex;
+
+      el.innerHTML = `
+        <div class="question">${cardData.text}</div>
+        <div class="meta">
+          <div>${cardData.topic.replace(/^\w/, c => c.toUpperCase())}</div>
+          <div>📌</div>
+        </div>
+      `;
+
+      let revealed = false;
+      let startX = 0;
+      let currentX = 0;
+
+      const onTap = () => {
+        if (!revealed) {
+          el.classList.add('revealed');
+          revealed = true;
+        }
+      };
+
+      const onDragStart = (e) => {
+        if (!revealed) return;
+        startX = e.touches ? e.touches[0].clientX : e.clientX;
+        el.style.transition = 'none';
+        window.addEventListener('touchmove', onDragMove);
+        window.addEventListener('touchend', onDragEnd);
+        window.addEventListener('mousemove', onDragMove);
+        window.addEventListener('mouseup', onDragEnd);
+      };
+
+      const onDragMove = (e) => {
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        currentX = x - startX;
+        el.style.transform = `translateX(${currentX}px) rotate(${currentX * 0.05}deg)`;
+      };
+
+      const onDragEnd = () => {
+        if (Math.abs(currentX) > 80) {
+          el.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+          el.style.transform = `translateX(${currentX * 4}px) rotate(${currentX * 0.2}deg)`;
+          el.style.opacity = 0;
+          setTimeout(() => {
+            el.remove();
+          }, 300);
+        } else {
+          el.style.transition = 'transform 0.3s ease';
+          el.style.transform = '';
+        }
+        currentX = 0;
+        window.removeEventListener('touchmove', onDragMove);
+        window.removeEventListener('touchend', onDragEnd);
+        window.removeEventListener('mousemove', onDragMove);
+        window.removeEventListener('mouseup', onDragEnd);
+      };
+
+      el.addEventListener('click', onTap);
+      el.addEventListener('touchstart', onDragStart);
+      el.addEventListener('mousedown', onDragStart);
+
+      return el;
+    };
+
+    const init = async () => {
+      const cards = await loadCards();
+      cards.forEach((card, i) => {
+        const el = createCardEl(card, cards.length - i);
+        deckEl.appendChild(el);
+      });
+    };
+
+    init();
   </script>
-  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
