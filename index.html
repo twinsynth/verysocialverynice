@@ -16,10 +16,10 @@
     </div>
 
     <!-- Minimal UI: Hamburger + Shuffle -->
-    <div class="control-bar">
-      <button id="menu-button">☰</button>
-      <button id="shuffle-button">🔀</button>
-    </div>
+    <div class="control-bar" style="position: absolute; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 1rem;">
+  <button id="menu-button" style="width: 48px; height: 48px; font-size: 1.2rem; border-radius: 12px; background: #4d3c97; color: white; border: none;">☰</button>
+  <button id="shuffle-button" style="width: 48px; height: 48px; font-size: 1.2rem; border-radius: 12px; background: #4d3c97; color: white; border: none;">🔀</button>
+</div>
 
     <!-- Slide-out Filter Menu -->
     <div id="menu-panel" class="hidden" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.95); display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 5;">
@@ -35,7 +35,7 @@
       form.innerHTML = "";
       topics.forEach(topic => {
         const label = document.createElement("label");
-        label.innerHTML = `<input type="checkbox" name="topic" value="${topic.id}" checked /> ${topic.name}`;
+        label.textContent = topic.name;
         form.appendChild(label);
       });
     }
