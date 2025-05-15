@@ -40,6 +40,12 @@
       overflow: hidden;
     }
 
+    .card .logo {
+      width: 20%;
+      margin: 0 auto 10px auto;
+      display: block;
+    }
+
     .card .question {
       font-size: 2rem;
       font-weight: 700;
@@ -109,13 +115,14 @@
       el.style.zIndex = zIndex;
 
       const capitalized = cardData.topic
-  .replace(/([a-z])([A-Z])/g, '$1 $2')   // camelCase → camel Case
-  .replace(/[_-]/g, ' ')                 // snake-case or kebab-case
-  .replace(/([a-z]+)/gi, w => w.toUpperCase()); // ALL CAPS
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .replace(/[_-]/g, ' ')
+        .replace(/([a-z]+)/gi, w => w.toUpperCase());
 
       const iconFile = iconMap[cardData.topic];
 
       el.innerHTML = `
+        <img src="./assets/icons/TSC LOGO.svg" alt="Logo" class="logo" />
         <div class="question">${cardData.text}</div>
         <div class="footer">
           <img src="./assets/icons/${iconFile}" alt="${capitalized} icon" />
