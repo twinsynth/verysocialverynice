@@ -23,6 +23,7 @@ export default {
     "You’ve already forgotten the most important moments of your life.",
     "The truth loses power the more times it’s repeated.",
     "Your personality is just a survival strategy you developed early on.",
+    "Life is a story unfolding.",
     "Most people never meet their real self — only the roles they play."
   ]
 };
