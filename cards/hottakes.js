@@ -11,7 +11,7 @@ export default {
     "AI should not be allowed in creative industries.",
     "Eating meat in the modern world is unethical.",
     "Universities are overrated and overpriced.",
-    "People care more about being right than being kind."
+    "People care more about being right than being kind.",
     "Android is better than Apple.",
     "Aliens are real.",
     "Four day work weeks should be a thing.",
@@ -25,6 +25,12 @@ export default {
     "Podcasts are overrated.",
     "It's okay to pirate a movie.",
     "Youtube Music is better than Spotify.",
+    "Art made by AI is still art.",
+    "Modern dating is just gamified loneliness.",
+    "All drugs should be legal and regulated.",
+    "The real villain of modern society is algorithmic addiction.",
+    "Influencers work harder than most 9-to-5 employees.",
+    "Working from home made everyone lazier.",
     
   ]
 };
