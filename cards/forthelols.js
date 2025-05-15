@@ -8,7 +8,7 @@ export default {
     "Heat Vision or Icy Breath?",
     "Dad Jokes are actaully good.",
     "If you were on a zombie tv show, how many seasons are you surviving?",
-    "You farm for 😂 on groupchats / teams ",
+    "You farm for *lol reactions* on groupchats / teams.",
     "Travel to the future or to the past?",
     "You’ve practiced your Oscar acceptance speech at least once.",
     "A good meme is better than a motivational quote any day.",
