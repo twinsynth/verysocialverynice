@@ -19,6 +19,18 @@ export default {
     "This game was made with ChatGPT.",
     "All these cards were written by ChatGPT.",
     "Go get a drink.",
+    "If sleep were a currency, you'd be broke.",
+    "Accidentally liking a 4-year-old post = social suicide.", 
+    "You’ve liked a meme out loud before actually liking it.",
+    "You’ve fake-laughed at a joke that wasn’t funny.",
+    "Doomscrolling is oddly therapeutic.",
+    "You secretly narrate your life like it’s a documentary.",
+    "Your toxic trait is giving TED Talks unprovoked.",
+    "You're the friend who sends memes instead of real support.",
+    "Shower + Music or nah.",
+
+    
+    
     
   ]
 };
