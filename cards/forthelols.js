@@ -11,7 +11,7 @@ export default {
     "You farm for 😂 on groupchats / teams ",
     "Travel to the future or to the past?",
     "You’ve practiced your Oscar acceptance speech at least once.",
-    "A good meme is better than a motivational quote any day."
+    "A good meme is better than a motivational quote any day.",
     "Life is boring without friends playing pranks on each other.",
     "What's the last reel you liked?",
     "What's on your discovery page?",
